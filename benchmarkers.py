@@ -3,6 +3,7 @@ import os
 
 FNULL = open(os.devnull, 'w')
 
+
 class benchmarkerc:
 	compiler = "gcc"
 	srcpath = "c/"
@@ -25,6 +26,7 @@ class benchmarkerc:
 		# Run whatever has been done
 		result = subprocess.call(["./" + self.binpath + self.item], stdout=FNULL)
 		return result == 0
+
 
 class benchmarkercpp:
 	compiler = "g++"
@@ -49,6 +51,7 @@ class benchmarkercpp:
 		result = subprocess.call(["./" + self.binpath + self.item], stdout=FNULL)
 		return result == 0
 
+
 class benchmarkerpython:
 	srcpath = "python3/"
 	suffix = "py"
@@ -67,6 +70,7 @@ class benchmarkerpython:
 		result = subprocess.call(["python3", self.srcpath + self.filename], stdout=FNULL)
 		return result == 0
 
+
 class benchmarkerooc:
 	compiler = "rock"
 	srcpath = "ooc/"
@@ -83,11 +87,13 @@ class benchmarkerooc:
 		if not os.path.exists(self.binpath):
 			os.makedirs(self.binpath)
 		my_env = os.environ.copy()
-		my_env["OOC_LIBS"] = "/home/mnaslund/versioned/ooc/"
-		result = subprocess.call([self.compiler, "-x", "-q", self.srcpath + self.filename, "+o " + self.binpath], env=my_env, stdout=FNULL)
+		my_env["OOC_LIBS"] = "/home/naslundx/versioned/"
+		result = subprocess.call([self.compiler, "-x", "-q", self.srcpath + self.filename, "+-o ", self.binpath], env=my_env, stdout=FNULL)
 		return result == 0
 
 	def execute(self):
 		# Run whatever has been done
 		result = subprocess.call(["./ooc/run-ooc.sh"], stdout=FNULL)
 		return result == 0
+
+# TODO Add support for python2, javascript, java, C#, Haskell, Erlang, Rust, Go, ... ...
