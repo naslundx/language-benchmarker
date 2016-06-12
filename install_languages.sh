@@ -2,39 +2,114 @@
 
 # Note: This script must be run with root priviligies
 
-apt-get update
+function check_exists () {
+    command -v $1 >/dev/null 2>&1
+}
 
-# TODO: Check if each already installed, and if so ignore
+sudo apt update
 
 # c
-apt-get install gcc
+if ! check_exists "gcc"
+then
+    apt install gcc
+else
+    printf "\nAlready installed: gcc\n"
+    gcc --version | head -1
+fi
 
 # c++
-apt-get install g++
+if ! check_exists "g++"
+then
+    apt install g++
+else
+    printf "\nAlready installed: g++\n"
+    g++ --version | head -1
+fi
 
 # python3
-apt-get install python3
+if ! check_exists "python3"
+then
+    apt install python3
+else
+    printf "\nAlready installed: python3\n"
+    python3 --version
+fi
 
 # ooc
-# TODO
+if ! check_exists "rock"
+then
+    wget "https://github.com/magic-lang/rock/releases/download/rock_1.0.20/rock_1.0.20.deb" -qO "rock_1.0.20.deb"
+    dpkg -i "rock_1.0.20.deb"
+    echo "Specify path for ooc-kean:"
+    read path
+    git clone https://github.com/magic-lang/ooc-kean $path
+else
+    printf "\nAlready installed: ooc (magic fork)"
+    rock --version
+fi
 
 # rust
-curl -sSf https://static.rust-lang.org/rustup.sh | sh
+if ! check_exists "rustc"
+then
+    curl -sSf https://static.rust-lang.org/rustup.sh | sh
+else
+    printf "\nAlready installed: rust\n"
+    rustc --version
+fi
 
 # go
-add-apt-repository ppa:ubuntu-lxc/lxd-stable
-apt-get update
-apt-get install golang
+if ! check_exists "go"
+then
+    add-apt-repository ppa:ubuntu-lxc/lxd-stable
+    apt update
+    apt install golang
+else
+    printf "\nAlready installed: go\n"
+    go version
+fi
 
 # java (OpenJDK 8)
-apt-get install openjdk-8-jdk
+if ! check_exists "java" || ! check_exists "javac"
+then
+    apt install openjdk-8-jdk
+else
+    printf "\nAlready installed: java\n"
+    javac -version
+fi
 
 # erlang
-apt-get install erlang-base
+if ! check_exists "erl" || ! check_exists "erlc"
+then
+    apt install erlang-base
+else
+    printf "\nAlready installed: erlang\n"
+    erl -version
+fi
 
 # haskell
-apt-get install ghc
+if ! check_exists "ghci"
+then
+    apt install ghc
+else
+    printf "\nAlready installed: haskell\n"
+    ghci --version
+fi
 
 # javascript (node.js)
-curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
-apt-get install -y nodejs
+if ! check_exists "node"
+then
+    curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+    apt install -y nodejs
+else
+    printf "\nAlready installed: node.js\n"
+    node --version
+fi
+
+# csharp (mono)
+if ! check_exists "mono" || ! check_exists "mcs"
+then
+    apt install mono-devel
+else
+    printf "\nAlready installed: c# (mono)\n"
+    mono --version | head -1
+fi
