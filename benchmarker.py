@@ -46,7 +46,10 @@ def benchmark():
 			else:
 				print("Unsupported language!")
 
-			result = benchmarker.prepare()
+			try:
+				result = benchmarker.prepare()
+			except:
+				result = 0
 
 			if result:
 				times = []
