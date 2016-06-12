@@ -3,15 +3,12 @@ import subprocess
 from benchmarkers import benchmarkerc, benchmarkercpp
 from benchmarkers import benchmarkerpython, benchmarkerooc
 
-# TODO Clean up with main func etc.
-# TODO take iterations as argument
-
 # TODO Ability to change compiler?
 
 # TODO Check all compiler, language versions etc. and print+store in log
 
-languages = ["c", "cpp", "python3"]  # TODO read from config file
-items = ["helloworld"]  # TODO read from config file
+languages = ["c", "cpp", "py3", "ooc"]  # TODO read from config file
+items = ["helloworld", "primes"]  # TODO read from config file
 iterations = 10
 
 
@@ -29,7 +26,7 @@ def benchmark():
 				benchmarker = benchmarkerc(item)
 			elif language == "cpp":
 				benchmarker = benchmarkercpp(item)
-			elif language == "python3":
+			elif language == "py3":
 				benchmarker = benchmarkerpython(item)
 			elif language == "ooc":
 				benchmarker = benchmarkerooc(item)
@@ -51,7 +48,7 @@ def benchmark():
 					average = sum(times) / len(times)
 				else:
 					average = 0.0
-				current_results.append(average)
+				current_results.append(average) # TODO also save min and max times
 				print("\tTime: " + str(round(average, 4)) + " s")
 			else:
 				print("Compilation failed")
@@ -64,7 +61,10 @@ def benchmark():
 
 # Generate a nice table output to file
 def save_to_file(results):
-	# TODO
+	print("\n\t" + "\t".join(items))
+	for i in range(0, len(languages)):
+		print(languages[i] + ":\t" + "\t".join(str(round(x, 3))+"s" for x in results[i])) # TODO needs better formatting
+	# TODO save to nice format file
 	None
 
 

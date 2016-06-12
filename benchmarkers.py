@@ -87,13 +87,15 @@ class benchmarkerooc:
 		if not os.path.exists(self.binpath):
 			os.makedirs(self.binpath)
 		my_env = os.environ.copy()
-		my_env["OOC_LIBS"] = "/home/naslundx/versioned/"
-		result = subprocess.call([self.compiler, "-x", "-q", self.srcpath + self.filename, "+-o ", self.binpath], env=my_env, stdout=FNULL)
+		my_env["OOC_LIBS"] = "/home/naslundx/versioned/" # TODO Should not have to do this!
+		result = subprocess.call([self.compiler, "-x", "-q", self.srcpath + self.filename], env=my_env, stdout=FNULL)
+		if result == 0:
+		 	os.rename(self.item, self.binpath + self.item)
 		return result == 0
 
 	def execute(self):
 		# Run whatever has been done
-		result = subprocess.call(["./ooc/run-ooc.sh"], stdout=FNULL)
+		result = subprocess.call(["./" + self.binpath + self.item], stdout=FNULL)
 		return result == 0
 
-# TODO Add support for python2, javascript, java, C#, Haskell, Erlang, Rust, Go, ... ...
+# TODO Add support for javascript, java, C#, Haskell, Erlang, Rust, Go, ... ...
