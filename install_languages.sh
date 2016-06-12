@@ -31,3 +31,6 @@ apt-get install openjdk-8-jdk
 
 # erlang
 apt-get install erlang-base
+
+# haskell
+apt-get install ghc

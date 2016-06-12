@@ -74,7 +74,7 @@ class benchmarkerpython:
 class benchmarkerooc:
 	compiler = "rock"
 	srcpath = "ooc/"
-	binpath = "ooc/bin/"
+	binpath = "ooc/"
 	suffix = "ooc"
 
 	def __init__(self, item):
@@ -194,6 +194,30 @@ class benchmarkererlang:
 	def execute(self):
 		# Run whatever has been done
 		result = subprocess.call(["erl", "-noshell", "-s", self.item, self.item, "-s", "init", "stop"], cwd="erlang/", stdout=FNULL)
+		return result == 0
+
+
+class benchmarkerhaskell:
+	compiler = "ghc"
+	srcpath = "haskell/"
+	binpath = "haskell/"
+	suffix = "hs"
+
+	def __init__(self, item):
+		# Put in all the neccessary stuff
+		self.item = item
+		self.filename = self.item + "." + self.suffix
+
+	def prepare(self):
+		# Languages like C, C++ need to compile, script languages need nothing?
+		if not os.path.exists(self.binpath):
+			os.makedirs(self.binpath)
+		result = subprocess.call([self.compiler, self.filename, "-o", self.item], cwd="haskell/", stdout=FNULL)
+		return result == 0
+
+	def execute(self):
+		# Run whatever has been done
+		result = subprocess.call(["./" + self.item], cwd="haskell/", stdout=FNULL)
 		return result == 0
 
 
