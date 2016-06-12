@@ -171,5 +171,30 @@ class benchmarkerjava:
 		result = subprocess.call(["java", self.item], cwd="java/", stdout=FNULL)
 		return result == 0
 
-	
-# TODO Add support for javascript, C#, Haskell, Erlang, ... ...
+
+class benchmarkererlang:
+	compiler = "erlc"
+	runner = "erl"
+	srcpath = "erlang/"
+	binpath = "erlang/"
+	suffix = "erl"
+
+	def __init__(self, item):
+		# Put in all the neccessary stuff
+		self.item = item
+		self.filename = self.item + "." + self.suffix
+
+	def prepare(self):
+		# Languages like C, C++ need to compile, script languages need nothing?
+		if not os.path.exists(self.binpath):
+			os.makedirs(self.binpath)
+		result = subprocess.call([self.compiler, self.filename], cwd="erlang/", stdout=FNULL)
+		return result == 0
+
+	def execute(self):
+		# Run whatever has been done
+		result = subprocess.call(["erl", "-noshell", "-s", self.item, self.item, "-s", "init", "stop"], cwd="erlang/", stdout=FNULL)
+		return result == 0
+
+
+# TODO Add support for javascript, C#, Haskell, ... ...

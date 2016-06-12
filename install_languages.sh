@@ -26,5 +26,8 @@ add-apt-repository ppa:ubuntu-lxc/lxd-stable
 apt-get update
 apt-get install golang
 
-# java
+# java (OpenJDK 8)
 apt-get install openjdk-8-jdk
+
+# erlang
+apt-get install erlang-base
