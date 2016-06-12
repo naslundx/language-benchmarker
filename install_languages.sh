@@ -34,3 +34,7 @@ apt-get install erlang-base
 
 # haskell
 apt-get install ghc
+
+# javascript (node.js)
+curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+apt-get install -y nodejs

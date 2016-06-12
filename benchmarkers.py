@@ -19,7 +19,7 @@ class benchmarkerc:
 		# Languages like C, C++ need to compile, script languages need nothing?
 		if not os.path.exists(self.binpath):
 			os.makedirs(self.binpath)
-		result = subprocess.call([self.compiler, self.srcpath + self.filename, "-o", self.binpath + self.item], stdout=FNULL)
+		result = subprocess.call([self.compiler, self.srcpath + self.filename, "-o", self.binpath + self.item, "-std=c11"], stdout=FNULL)
 		return result == 0
 
 	def execute(self):
@@ -221,4 +221,24 @@ class benchmarkerhaskell:
 		return result == 0
 
 
-# TODO Add support for javascript, C#, Haskell, ... ...
+class benchmarkerjavascript:
+	compiler = "node"
+	srcpath = "js/"
+	suffix = "js"
+
+	def __init__(self, item):
+		# Put in all the neccessary stuff
+		self.item = item
+		self.filename = self.item + "." + self.suffix
+
+	def prepare(self):
+		# Languages like C, C++ need to compile, script languages need nothing?
+		return True
+
+	def execute(self):
+		# Run whatever has been done
+		result = subprocess.call([self.compiler, self.filename], cwd="js/", stdout=FNULL)
+		return result == 0
+
+
+# TODO Add support for C# (Mono)
