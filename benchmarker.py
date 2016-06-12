@@ -2,14 +2,16 @@ import time
 import subprocess
 from benchmarkers import benchmarkerc, benchmarkercpp
 from benchmarkers import benchmarkerpython, benchmarkerooc
+from benchmarkers import benchmarkerrust, benchmarkergo
+from benchmarkers import benchmarkerjava
 
 # TODO Ability to change compiler?
 
 # TODO Check all compiler, language versions etc. and print+store in log
 
-languages = ["c", "cpp", "py3", "ooc"]  # TODO read from config file
+languages = ["c", "cpp", "py3", "ooc", "rust", "go", "java"]  # TODO read from config file
 items = ["helloworld", "primes"]  # TODO read from config file
-iterations = 10
+iterations = 5
 
 
 # Run all items in all languages
@@ -30,29 +32,40 @@ def benchmark():
 				benchmarker = benchmarkerpython(item)
 			elif language == "ooc":
 				benchmarker = benchmarkerooc(item)
+			elif language == "rust":
+				benchmarker = benchmarkerrust(item)
+			elif language == "go":
+				benchmarker = benchmarkergo(item)
+			elif language == "java":
+				benchmarker = benchmarkerjava(item)
+			else:
+				print("Unsupported language!")
 
 			result = benchmarker.prepare()
 
 			if result:
 				times = []
 				for it in range(0, iterations):
-					start = time.time()
-					result = benchmarker.execute()
-					end = time.time()
-					if result:
-						times.append(end - start)
-					else:
-						print("Running failed.")
+					try:
+						start = time.time()
+						result = benchmarker.execute()
+						end = time.time()
+						if result:
+							times.append(end - start)
+						else:
+							print("\tRunning failed.")
+					except:
+						print("\tRunning failed.")
 
 				if len(times) > 0:
 					average = sum(times) / len(times)
 				else:
-					average = 0.0
+					average = float('nan')
 				current_results.append(average) # TODO also save min and max times
 				print("\tTime: " + str(round(average, 4)) + " s")
 			else:
-				print("Compilation failed")
-				current_results.append(0.0)
+				print("\tCompilation failed")
+				current_results.append(float('nan'))
 
 		results.append(current_results)
 
@@ -63,7 +76,7 @@ def benchmark():
 def save_to_file(results):
 	print("\n\t" + "\t".join(items))
 	for i in range(0, len(languages)):
-		print(languages[i] + ":\t" + "\t".join(str(round(x, 3))+"s" for x in results[i])) # TODO needs better formatting
+		print(languages[i] + ":\t" + "\t\t".join(str(round(x, 3))+"s" for x in results[i])) # TODO needs better formatting
 	# TODO save to nice format file
 	None
 
