@@ -241,4 +241,26 @@ class benchmarkerjavascript:
 		return result == 0
 
 
-# TODO Add support for C# (Mono)
+class benchmarkercsharp:
+	compiler = "mcs"
+	runner = "mono"
+	srcpath = "csharp/"
+	suffix = "cs"
+	exesuffix = "exe"
+
+	def __init__(self, item):
+		# Put in all the neccessary stuff
+		self.item = item
+		self.filename = self.item + "." + self.suffix
+		self.binary = self.item + "." + self.exesuffix
+
+	def prepare(self):
+		# Languages like C, C++ need to compile, script languages need nothing?
+		result = subprocess.call([self.compiler, self.filename], cwd="csharp/", stdout=FNULL)
+		return True
+
+	def execute(self):
+		# Run whatever has been done
+		result = subprocess.call([self.runner, self.binary], cwd="csharp/", stdout=FNULL)
+		return result == 0
+
