@@ -5,13 +5,14 @@ from benchmarkers import benchmarkerpython, benchmarkerooc
 from benchmarkers import benchmarkerrust, benchmarkergo
 from benchmarkers import benchmarkerjava, benchmarkererlang
 from benchmarkers import benchmarkerhaskell, benchmarkerjavascript
-from benchmarkers import benchmarkercsharp
+from benchmarkers import benchmarkercsharp, benchmarkerlua
+from benchmarkers import benchmarkerruby
 
 # TODO Ability to change compiler?
 
 # TODO Check all compiler, language versions etc. and print+store in log
 
-languages = ["c", "cpp", "py3", "ooc", "rust", "go", "java", "erl", "hskl", "js", "csharp"]  # TODO read from config file
+languages = ["c", "cpp", "py2", "py3", "ooc", "rust", "go", "java", "erl", "hskl", "js", "csharp", "lua", "ruby"]  # TODO read from config file
 items = ["helloworld", "primes"]  # TODO read from config file
 iterations = 2
 
@@ -30,8 +31,10 @@ def benchmark():
 				benchmarker = benchmarkerc(item)
 			elif language == "cpp":
 				benchmarker = benchmarkercpp(item)
+			elif language == "py2":
+				benchmarker = benchmarkerpython(2, item)
 			elif language == "py3":
-				benchmarker = benchmarkerpython(item)
+				benchmarker = benchmarkerpython(3, item)
 			elif language == "ooc":
 				benchmarker = benchmarkerooc(item)
 			elif language == "rust":
@@ -48,6 +51,10 @@ def benchmark():
 				benchmarker = benchmarkerjavascript(item)
 			elif language == "csharp":
 				benchmarker = benchmarkercsharp(item)
+			elif language == "lua":
+				benchmarker = benchmarkerlua(item)
+			elif language == "ruby":
+				benchmarker = benchmarkerruby(item)
 			else:
 				print("Unsupported language!")
 

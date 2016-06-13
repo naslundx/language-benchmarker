@@ -9,5 +9,5 @@ def is_prime(num):
     else:
         return True
 
-result = filter(is_prime, range(1, 100000))
+result = filter(is_prime, range(1, 20000))
 

@@ -53,11 +53,15 @@ class benchmarkercpp:
 
 
 class benchmarkerpython:
-	srcpath = "python3/"
+	srcpath = "python/"
 	suffix = "py"
 
-	def __init__(self, item):
+	def __init__(self, version, item):
 		# Put in all the neccessary stuff
+		if version == 2:
+			self.compiler = "python"
+		else:
+			self.compiler = "python3"
 		self.item = item
 		self.filename = self.item + "." + self.suffix
 
@@ -67,7 +71,7 @@ class benchmarkerpython:
 
 	def execute(self):
 		# Run whatever has been done
-		result = subprocess.call(["python3", self.srcpath + self.filename], stdout=FNULL)
+		result = subprocess.call([self.compiler, self.srcpath + self.filename], stdout=FNULL)
 		return result == 0
 
 
@@ -257,10 +261,50 @@ class benchmarkercsharp:
 	def prepare(self):
 		# Languages like C, C++ need to compile, script languages need nothing?
 		result = subprocess.call([self.compiler, self.filename], cwd="csharp/", stdout=FNULL)
-		return True
+		return result == 0
 
 	def execute(self):
 		# Run whatever has been done
 		result = subprocess.call([self.runner, self.binary], cwd="csharp/", stdout=FNULL)
 		return result == 0
 
+
+class benchmarkerlua:
+	compiler = "lua"
+	srcpath = "lua/"
+	suffix = "lua"
+
+	def __init__(self, item):
+		# Put in all the neccessary stuff
+		self.item = item
+		self.filename = self.item + "." + self.suffix
+
+	def prepare(self):
+		# Languages like C, C++ need to compile, script languages need nothing?
+		return True
+
+	def execute(self):
+		# Run whatever has been done
+		result = subprocess.call([self.compiler, self.filename], cwd="lua/", stdout=FNULL)
+		return result == 0
+
+
+
+class benchmarkerruby:
+	compiler = "ruby"
+	srcpath = "ruby/"
+	suffix = "rb"
+
+	def __init__(self, item):
+		# Put in all the neccessary stuff
+		self.item = item
+		self.filename = self.item + "." + self.suffix
+
+	def prepare(self):
+		# Languages like C, C++ need to compile, script languages need nothing?
+		return True
+
+	def execute(self):
+		# Run whatever has been done
+		result = subprocess.call([self.compiler, self.filename], cwd="ruby/", stdout=FNULL)
+		return result == 0

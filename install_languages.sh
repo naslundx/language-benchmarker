@@ -6,7 +6,7 @@ function check_exists () {
     command -v $1 >/dev/null 2>&1
 }
 
-sudo apt update
+apt update
 
 # c
 if ! check_exists "gcc"
@@ -112,4 +112,22 @@ then
 else
     printf "\nAlready installed: c# (mono)\n"
     mono --version | head -1
+fi
+
+# lua
+if ! check_exists "lua"
+then
+    apt install lua5.2
+else
+    printf "\nAlready installed: lua\n"
+    lua -v
+fi
+
+# ruby
+if ! check_exists "ruby"
+then
+    apt install ruby
+else
+    printf "\nAlready installed: ruby\n"
+    ruby --version
 fi
