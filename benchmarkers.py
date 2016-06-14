@@ -142,12 +142,12 @@ class benchmarkergo:
 			os.makedirs(self.binpath)
 		my_env = os.environ.copy()
 		my_env["GOPATH"] = "/home/naslundx/versioned/language-benchmarker/go" # TODO Should not have to do this!
-		result = subprocess.call([self.compiler, "install", self.item], env=my_env, stdout=FNULL)
-		return result == 1
+		result = subprocess.call([self.compiler, "build", self.item], env=my_env, cwd="go/", stdout=FNULL)
+		return result == 0
 
 	def execute(self):
 		# Run whatever has been done
-		result = subprocess.call(["./go" + self.binpath + self.item], stdout=FNULL)
+		result = subprocess.call(["./" + self.item], cwd="go/", stdout=FNULL)
 		return result == 0
 
 
