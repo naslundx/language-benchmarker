@@ -100,10 +100,22 @@ def save_to_file(results):
 	# TODO save to nice format file
 	None
 
+def save_to_html(results):
+	html = '<html><body><table style="text-align:right">'
+	heading = "<th></th>" + "".join([ '<th style="font-style:bold;text-align:center;padding:5px 20px;">' + next + "</th>" for next in items])
+	html += "<tr>" + heading + "</tr>"
+	for i in range(len(languages)):
+		row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + str(round(next, 3)) + " s" + "</td>" for next in results[i]])
+		html += "<tr>" + row + "</tr>"
+	html += "</html></body></table>"
+	htmlFile = open("results.html", "w")
+	htmlFile.write(html)
+	htmlFile.close()
 
 def main():
 	results = benchmark()
 	save_to_file(results)
+	save_to_html(results)
 
 
 if __name__ == "__main__":
