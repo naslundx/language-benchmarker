@@ -13,7 +13,7 @@ from benchmarkers import benchmarkerruby
 # TODO Check all compiler, language versions etc. and print+store in log
 
 languages = ["c", "cpp", "py2", "py3", "ooc", "rust", "go", "java", "erl", "hskl", "js", "csharp", "lua", "ruby"]  # TODO read from config file
-items = ["helloworld", "primes", "densematrix"]  # TODO read from config file
+items = ["helloworld", "primes", "densematrix", "binarytree"]  # TODO read from config file
 iterations = 3
 
 
