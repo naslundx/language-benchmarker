@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "",
+    "run": "node helloworld.js",
+    "clean": ""
+  },
+  "primes":
+  {
+    "build": "",
+    "run": "node primes.js",
+    "clean": ""
+  }
+}

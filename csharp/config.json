@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "mcs helloworld.cs",
+    "run": "mono helloworld.exe",
+    "clean": "rm helloworld.exe"
+  },
+  "primes":
+  {
+    "build": "mcs primes.cs",
+    "run": "mono primes.exe",
+    "clean": "rm primes.exe"
+  }
+}

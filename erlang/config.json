@@ -1,0 +1,8 @@
+{
+  "helloworld":
+  {
+    "build": "erlc helloworld.erl",
+    "run": "erl -noshell -s helloworld helloworld -s init stop",
+    "clean": "rm helloworld.beam"
+  }
+}

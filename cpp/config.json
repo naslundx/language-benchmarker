@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "g++ helloworld.cpp -o helloworld",
+    "run": "./helloworld",
+    "clean": "rm helloworld"
+  },
+  "primes":
+  {
+    "build": "g++ primes.cpp -o primes",
+    "run": "./primes",
+    "clean": "rm primes"
+  }
+}

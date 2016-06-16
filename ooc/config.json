@@ -1,0 +1,20 @@
+{
+  "helloworld":
+  {
+    "build": "rock -q helloworld.ooc",
+    "run": "./helloworld",
+    "clean": "rock -x && rm helloworld"
+  },
+  "primes":
+  {
+    "build": "rock -q primes.ooc",
+    "run": "./primes",
+    "clean": "rock -x && rm primes"
+  },
+  "densematrix":
+  {
+    "build": "rock -q densematrix.ooc",
+    "run": "./densematrix",
+    "clean": "rock -x && rm densematrix"
+  }
+}

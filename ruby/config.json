@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "",
+    "run": "ruby helloworld.rb",
+    "clean": ""
+  },
+  "primes":
+  {
+    "build": "",
+    "run": "ruby primes.rb",
+    "clean": ""
+  }
+}

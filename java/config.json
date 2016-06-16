@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "javac helloworld.java",
+    "run": "java helloworld",
+    "clean": "rm helloworld.class"
+  },
+  "primes":
+  {
+    "build": "javac primes.java",
+    "run": "java primes",
+    "clean": "rm primes.class"
+  }
+}

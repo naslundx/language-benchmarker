@@ -1,18 +1,12 @@
 import time
 import subprocess
-from benchmarkers import benchmarkerc, benchmarkercpp
-from benchmarkers import benchmarkerpython, benchmarkerooc
-from benchmarkers import benchmarkerrust, benchmarkergo
-from benchmarkers import benchmarkerjava, benchmarkererlang
-from benchmarkers import benchmarkerhaskell, benchmarkerjavascript
-from benchmarkers import benchmarkercsharp, benchmarkerlua
-from benchmarkers import benchmarkerruby
+import json
+import subprocess
+import os
 
-# TODO Ability to change compiler?
+FNULL = open(os.devnull, 'w')
 
-# TODO Check all compiler, language versions etc. and print+store in log
-
-languages = ["c", "cpp", "py2", "py3", "ooc", "rust", "go", "java", "erl", "hskl", "js", "csharp", "lua", "ruby"]  # TODO read from config file
+languages = ["c", "cpp", "python3", "ooc", "rust", "go", "java", "erlang", "haskell", "js", "csharp", "lua", "ruby"] 
 items = ["helloworld", "primes", "densematrix", "binarytree"]  # TODO read from config file
 iterations = 3
 
@@ -21,85 +15,85 @@ iterations = 3
 def benchmark():
 	results = []
 	for language in languages:
-		print("Running: " + language)
-		current_results = []
+		print("\n===\nRunning: " + language)
+		language_results = []
+		config_data = open(language + '/config.json')
+		config = json.load(config_data)
+		config_data.close()
 
 		for item in items:
-			print("\t" + item)
-
-			if language == "c":
-				benchmarker = benchmarkerc(item)
-			elif language == "cpp":
-				benchmarker = benchmarkercpp(item)
-			elif language == "py2":
-				benchmarker = benchmarkerpython(2, item)
-			elif language == "py3":
-				benchmarker = benchmarkerpython(3, item)
-			elif language == "ooc":
-				benchmarker = benchmarkerooc(item)
-			elif language == "rust":
-				benchmarker = benchmarkerrust(item)
-			elif language == "go":
-				benchmarker = benchmarkergo(item)
-			elif language == "java":
-				benchmarker = benchmarkerjava(item)
-			elif language == "erl":
-				benchmarker = benchmarkererlang(item)
-			elif language == "hskl":
-				benchmarker = benchmarkerhaskell(item)
-			elif language == "js":
-				benchmarker = benchmarkerjavascript(item)
-			elif language == "csharp":
-				benchmarker = benchmarkercsharp(item)
-			elif language == "lua":
-				benchmarker = benchmarkerlua(item)
-			elif language == "ruby":
-				benchmarker = benchmarkerruby(item)
-			else:
-				print("Unsupported language!")
+			print(" * " + item)
+			try:
+				item_data = config[item]
+				print(item_data)
+				clean_cmd = item_data['clean']
+				build_cmd = item_data['build']
+				run_cmd = item_data['run']
+			except:
+				print("   Not implemented.")
+				language_results.append(float('nan'))
+				continue
+			
+			try:
+				print("   > "+clean_cmd)
+				subprocess.call(clean_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
+			except:
+				None
 
 			try:
-				result = benchmarker.prepare()
+				print("   > "+build_cmd)
+				if build_cmd != "":
+					build_result = subprocess.call(build_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
+				else:
+					build_result = 0
 			except:
-				result = 0
+				build_result = 1
+				print("   Compilation failed.")
+				language_results.append(float('nan'))
+				continue
 
-			if result:
+			if build_result == 0:
+				print("   > "+run_cmd)
 				times = []
 				for it in range(0, iterations):
 					try:
 						start = time.time()
-						result = benchmarker.execute()
+						run_result = subprocess.call(run_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
 						end = time.time()
-						if result:
+						if run_result == 0:
 							times.append(end - start)
 						else:
-							print("\tRunning failed.")
+							print("   Running failed.")
 					except:
-						print("\tRunning failed.")
+						print("   Running failed.")
 
 				if len(times) > 0:
 					average = sum(times) / len(times)
 				else:
 					average = float('nan')
-				current_results.append(average) # TODO also save min and max times
-				print("\tTime: " + str(round(average, 4)) + " s")
-			else:
-				print("\tCompilation failed")
-				current_results.append(float('nan'))
+				language_results.append(average) # TODO also save min and max times
+				print("   Average time: " + str(round(average, 4)) + " s")
 
-		results.append(current_results)
+		results.append(language_results)
 
 	return results
 
 
-# Generate a nice table output to file
-def save_to_file(results):
-	print("\n\t" + "\t".join(items))
+# Print brief summary to console
+def print_to_console(results):
+	print("\n" + ", ".join(items))
 	for i in range(0, len(languages)):
-		print(languages[i] + ":\t" + "\t\t".join(str(round(x, 3)) + " s" for x in results[i])) # TODO needs better formatting
-	# TODO save to nice format file
+		print(languages[i] + ":" + ", ".join(str(round(x, 3)) + " s" for x in results[i])) # TODO needs better formatting
 	None
 
+
+# Generate a summary to a text file
+def save_to_file(results):
+	# TODO
+	None
+
+
+# Generate a nice table output to file
 def save_to_html(results):
 	html = '<html><body><table style="text-align:right">'
 	heading = "<th></th>" + "".join([ '<th style="font-style:bold;text-align:center;padding:5px 20px;">' + next + "</th>" for next in items])
@@ -107,14 +101,15 @@ def save_to_html(results):
 	for i in range(len(languages)):
 		row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + str(round(next, 3)) + " s" + "</td>" for next in results[i]])
 		html += "<tr>" + row + "</tr>"
-	html += "</html></body></table>"
+	html += "</table></body></html>"
 	htmlFile = open("results.html", "w")
 	htmlFile.write(html)
 	htmlFile.close()
 
 def main():
 	results = benchmark()
-	save_to_file(results)
+	print_to_console(results)
+	# save_to_file(results)
 	save_to_html(results)
 
 

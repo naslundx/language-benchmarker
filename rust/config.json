@@ -1,0 +1,8 @@
+{
+  "helloworld":
+  {
+    "build": "rustc helloworld.rs -o helloworld",
+    "run": "./helloworld",
+    "clean": "rm helloworld"
+  }
+}
