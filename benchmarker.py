@@ -13,6 +13,9 @@ iterations = 3
 
 # Run all items in all languages
 def benchmark():
+	my_env = os.environ.copy()
+	my_env["GOPATH"] = os.getcwd()+'/go'
+
 	results = []
 	for language in languages:
 		print("\n===\nRunning: " + language)
@@ -43,7 +46,7 @@ def benchmark():
 			try:
 				print("   > "+build_cmd)
 				if build_cmd != "":
-					build_result = subprocess.call(build_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
+					build_result = subprocess.call(build_cmd.split(' '), cwd=language+'/', env=my_env, stdout=FNULL, stderr=FNULL)
 				else:
 					build_result = 0
 			except:
@@ -58,7 +61,7 @@ def benchmark():
 				for it in range(0, iterations):
 					try:
 						start = time.time()
-						run_result = subprocess.call(run_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
+						run_result = subprocess.call(run_cmd.split(' '), cwd=language+'/', env=my_env, stdout=FNULL, stderr=FNULL)
 						end = time.time()
 						if run_result == 0:
 							times.append(end - start)
