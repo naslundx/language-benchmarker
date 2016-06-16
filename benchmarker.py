@@ -3,6 +3,7 @@ import subprocess
 import json
 import subprocess
 import os
+import sys
 
 FNULL = open(os.devnull, 'w')
 
@@ -84,16 +85,31 @@ def benchmark():
 
 # Print brief summary to console
 def print_to_console(results):
-	print("\n" + ", ".join(items))
-	for i in range(0, len(languages)):
-		print(languages[i] + ":" + ", ".join(str(round(x, 3)) + " s" for x in results[i])) # TODO needs better formatting
-	None
+	languageMaxCharacter = len(max(languages, key = len))
+	formattedResults = list(results)
+	columnMaxes = [len(next) for next in items]
+	for idx, row in enumerate(formattedResults):
+		formattedResults[idx] = ["{:.3f}".format(col) + " s" for col in row]
+		for jdx, (m, r) in enumerate(zip(columnMaxes, formattedResults[idx])):
+			if m < len(r):
+				columnMaxes[jdx] = len(r)
+	
+	columnGap = "    "
+	firstPart = "\n" + (languageMaxCharacter + 3) * " "
+	theRest = columnGap.join( ("{:^" + str(columnMaxes[colidx]) + "}").format(title) for colidx, title in enumerate(items) )
+	print(firstPart + theRest)
+	for idx, language in enumerate(languages):
+		firstPart = language.rjust(languageMaxCharacter) + " : " 
+		theRest = columnGap.join( ( "{:>" + str(columnMaxes[colidx]) + "}").format(res) for colidx, res in enumerate(formattedResults[idx]) )
+		print(firstPart + theRest)
 
 
 # Generate a summary to a text file
 def save_to_file(results):
-	# TODO
-	None
+	outPipe = sys.stdout
+	sys.stdout = open("results.txt", "w")
+	print_to_console(results)
+	sys.stdout = outPipe
 
 
 # Generate a nice table output to file
@@ -102,7 +118,7 @@ def save_to_html(results):
 	heading = "<th></th>" + "".join([ '<th style="font-style:bold;text-align:center;padding:5px 20px;">' + next + "</th>" for next in items])
 	html += "<tr>" + heading + "</tr>"
 	for i in range(len(languages)):
-		row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + str(round(next, 3)) + " s" + "</td>" for next in results[i]])
+		row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + "{:.3f}".format(next) + " s" + "</td>" for next in results[i]])
 		html += "<tr>" + row + "</tr>"
 	html += "</table></body></html>"
 	htmlFile = open("results.html", "w")
@@ -112,7 +128,7 @@ def save_to_html(results):
 def main():
 	results = benchmark()
 	print_to_console(results)
-	# save_to_file(results)
+	save_to_file(results)
 	save_to_html(results)
 
 
