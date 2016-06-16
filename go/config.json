@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "go build helloworld",
+    "run": "./helloworld",
+    "clean": "rm helloworld"
+  },
+  "primes":
+  {
+    "build": "go build primes",
+    "run": "./primes",
+    "clean": "rm primes"
+  }
+}

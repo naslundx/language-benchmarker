@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "",
+    "run": "lua helloworld.lua",
+    "clean": ""
+  },
+  "primes":
+  {
+    "build": "",
+    "run": "lua primes.lua",
+    "clean": ""
+  }
+}

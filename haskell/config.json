@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "ghc helloworld.hs -o helloworld",
+    "run": "./helloworld",
+    "clean": "rm helloworld; rm helloworld.hi; rm helloworld.o"
+  },
+  "primes":
+  {
+    "build": "ghc primes.hs -o primes",
+    "run": "./primes",
+    "clean": "rm primes; rm primes.hi; rm primes.o"
+  }
+}

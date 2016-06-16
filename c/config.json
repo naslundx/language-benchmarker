@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "gcc helloworld.c -o helloworld -std=c11",
+    "run": "./helloworld",
+    "clean": "rm helloworld"
+  },
+  "primes":
+  {
+    "build": "gcc primes.c -o primes -std=c11",
+    "run": "./primes",
+    "clean": "rm primes"
+  }
+}
