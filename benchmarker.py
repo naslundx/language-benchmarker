@@ -6,7 +6,7 @@ import os
 
 FNULL = open(os.devnull, 'w')
 
-languages = ["c", "cpp", "python3", "ooc", "rust", "go", "java", "erlang", "haskell", "js", "csharp", "lua", "ruby"] 
+languages = ["c", "cpp", "python3", "ooc", "rust", "go", "java", "erlang", "haskell", "js", "csharp", "lua", "ruby", "perl"] 
 items = ["helloworld", "primes", "densematrix", "binarytree"]  # TODO read from config file
 iterations = 3
 

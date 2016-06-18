@@ -1,0 +1,8 @@
+{
+  "helloworld":
+  {
+    "build": "",
+    "run": "perl helloworld.pl",
+    "clean": ""
+  }
+}

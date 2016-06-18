@@ -131,3 +131,13 @@ else
     printf "\nAlready installed: ruby\n"
     ruby --version
 fi
+
+# perl
+if ! check_exists "perl"
+then
+    curl -L http://xrl.us/installperlnix | bash
+else
+    printf "\nAlready installed: perl\n"
+    perl -v | head -2 | tail -n1
+fi
+
