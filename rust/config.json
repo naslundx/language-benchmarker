@@ -4,5 +4,11 @@
     "build": "rustc helloworld.rs -o helloworld",
     "run": "./helloworld",
     "clean": "rm helloworld"
+  },
+  "primes":
+  {
+    "build": "rustc primes.rs -o primes",
+    "run": "./primes",
+    "clean": "rm primes"
   }
 }
