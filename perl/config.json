@@ -4,5 +4,11 @@
     "build": "",
     "run": "perl helloworld.pl",
     "clean": ""
+  },
+  "primes":
+  {
+    "build": "",
+    "run": "perl primes.pl",
+    "clean": ""
   }
 }
