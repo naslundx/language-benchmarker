@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "",
+    "run": "python helloworld.py",
+    "clean": ""
+  },
+  "primes":
+  {
+    "build": "",
+    "run": "python primes.py",
+    "clean": ""
+  }
+}
