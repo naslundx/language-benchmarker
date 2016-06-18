@@ -5,8 +5,6 @@ import subprocess
 import os
 import argparse
 import sys
-from os import listdir
-from os.path import isfile, join
 
 FNULL = open(os.devnull, 'w')
 
@@ -14,18 +12,19 @@ FNULL = open(os.devnull, 'w')
 # Find all languages being used
 def get_languages(include_str="", exclude_str=""):
 	languages = []
-	possible_languages = [x[0] for x in os.walk(os.getcwd()) if not '.' in x[0] or '_' in x[0]]
+	possible_languages = [x[0] for x in os.walk(os.getcwd()) if not '.' in x[0] or '_' not in x[0]]
 
 	for dir in possible_languages:
-		files = [f for f in listdir(dir) if isfile(join(dir, f))]
+		files = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
 		if 'config.json' in files:
 			directory = os.path.split(dir)
 			languages.append(directory[1])
 
 	if include_str:
 		includes = include_str.split(',')
-		result = [language for language in languages if language in includes]
-		languages = result
+		if set(languages) & set(includes):  # Only do this if at least one language is in the include string
+			result = [language for language in languages if language in includes]
+			languages = result
 
 	if exclude_str:
 		excludes = exclude_str.split(',')
@@ -43,15 +42,15 @@ def get_items(languages, include_str="", exclude_str=""):
 		config = json.load(config_data)
 		config_data.close()
 
-		print(config.keys())
 		for item in config.keys():
 			if item not in items:
 				items.append(item)
 
 	if include_str:
 		includes = include_str.split(',')
-		result = [item for item in items if item in includes]
-		items = result
+		if set(items) & set(includes):  # Only do this if at least one item is in the include string
+			result = [item for item in items if item in includes]
+			items = result
 
 	if exclude_str:
 		excludes = exclude_str.split(',')
