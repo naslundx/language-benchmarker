@@ -10,5 +10,11 @@
     "build": "go build primes",
     "run": "./primes",
     "clean": "rm primes"
+  },
+  "binarytree":
+  {
+    "build": "go build binarytree",
+    "run": "./binarytree",
+    "clean": "rm binarytree"
   }
 }
