@@ -3,17 +3,34 @@ import subprocess
 import json
 import subprocess
 import os
+import argparse
 import sys
 
 FNULL = open(os.devnull, 'w')
-
 languages = ["c", "cpp", "python2", "python3", "ooc", "rust", "go", "java", "erlang", "haskell", "js", "csharp", "lua", "ruby", "perl"] 
 items = ["helloworld", "primes", "densematrix", "binarytree"]  # TODO read from config file
-iterations = 3
+
+
+# Call clean on all items
+def cleanup():
+	for language in languages:
+		config_data = open(language + '/config.json')
+		config = json.load(config_data)
+		config_data.close()
+
+		for item in items:
+			try:
+				item_data = config[item]
+				clean_cmd = item_data['clean']
+				if clean_cmd != "":
+					print("   > " + language + ": " + clean_cmd)
+					subprocess.call(clean_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
+			except:
+				None
 
 
 # Run all items in all languages
-def benchmark():
+def benchmark(iterations=3, build_only=True):
 	my_env = os.environ.copy()
 	my_env["GOPATH"] = os.getcwd()+'/go'
 
@@ -30,19 +47,12 @@ def benchmark():
 			try:
 				item_data = config[item]
 				print(item_data)
-				clean_cmd = item_data['clean']
 				build_cmd = item_data['build']
 				run_cmd = item_data['run']
 			except:
 				print("   Not implemented.")
 				language_results.append(float('nan'))
 				continue
-			
-			try:
-				print("   > "+clean_cmd)
-				subprocess.call(clean_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
-			except:
-				None
 
 			try:
 				print("   > "+build_cmd)
@@ -56,27 +66,28 @@ def benchmark():
 				language_results.append(float('nan'))
 				continue
 
-			if build_result == 0:
-				print("   > "+run_cmd)
-				times = []
-				for it in range(0, iterations):
-					try:
-						start = time.time()
-						run_result = subprocess.call(run_cmd.split(' '), cwd=language+'/', env=my_env, stdout=FNULL, stderr=FNULL)
-						end = time.time()
-						if run_result == 0:
-							times.append(end - start)
-						else:
+			if build_only == False:
+				if build_result == 0:
+					print("   > "+run_cmd)
+					times = []
+					for it in range(0, iterations):
+						try:
+							start = time.time()
+							run_result = subprocess.call(run_cmd.split(' '), cwd=language+'/', env=my_env, stdout=FNULL, stderr=FNULL)
+							end = time.time()
+							if run_result == 0:
+								times.append(end - start)
+							else:
+								print("   Running failed.")
+						except:
 							print("   Running failed.")
-					except:
-						print("   Running failed.")
 
-				if len(times) > 0:
-					average = sum(times) / len(times)
-				else:
-					average = float('nan')
-				language_results.append(average) # TODO also save min and max times
-				print("   Average time: " + str(round(average, 4)) + " s")
+					if len(times) > 0:
+						average = sum(times) / len(times)
+					else:
+						average = float('nan')
+					language_results.append(average) # TODO also save min and max times
+					print("   Average time: " + str(round(average, 4)) + " s")
 
 		results.append(language_results)
 
@@ -125,11 +136,23 @@ def save_to_html(results):
 	htmlFile.write(html)
 	htmlFile.close()
 
+
 def main():
-	results = benchmark()
-	print_to_console(results)
-	save_to_file(results)
-	save_to_html(results)
+	parser = argparse.ArgumentParser(description='Benchmarking tool for comparing different programming languages.')
+	parser.add_argument("--iterations", action="store", dest="iterations", type=int, default=3, help="Number of iterations")
+	parser.add_argument("--include", action="store", dest="include", default="", help="Include (only) languages/items in comma-separated list.")
+	parser.add_argument("--exclude", action="store", dest="exclude", default="", help="Exclude languages/items in comma-separated list.")
+	parser.add_argument("-c", "--clean", action="store_true", dest="clean", default=False, help="Only run cleanup.")
+	parser.add_argument("-b", "--build-only", action="store_true", dest="buildonly", default=False, help="Build, but do not run.")
+	parse_results = parser.parse_args()
+
+	cleanup()
+	if parse_results.clean == False or parse_results.buildonly == True:
+		results = benchmark(parse_results.iterations, parse_results.buildonly)
+		if parse_results.buildonly == False:
+			print_to_console(results)
+			save_to_file(results)
+			save_to_html(results)
 
 
 if __name__ == "__main__":
