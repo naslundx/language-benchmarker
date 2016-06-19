@@ -5,6 +5,7 @@ import subprocess
 import os
 import argparse
 import sys
+import math
 
 FNULL = open(os.devnull, 'w')
 
@@ -78,6 +79,17 @@ def cleanup(languages, items):
 				None
 
 
+def statistical_analysis(times):
+	if len(times) == 0:
+		return {'average':float('nan'), 'std_dev':float('nan'), 'minimum':float('nan'), 'maximum':float('nan')}
+	
+	average = sum(times) / len(times)
+	maximum = max(times)
+	minimum = min(times)
+	std_dev = math.sqrt(sum([(x - average)**2 for x in times]) / len(times))
+
+	return {'average':average, 'std_dev':std_dev, 'minimum':minimum, 'maximum':maximum}
+
 # Run all items in all languages
 def benchmark(languages, items, iterations=3, build_only=True):
 	my_env = os.environ.copy()
@@ -100,7 +112,7 @@ def benchmark(languages, items, iterations=3, build_only=True):
 				run_cmd = item_data['run']
 			except:
 				print("   Not implemented.")
-				language_results.append(float('nan'))
+				language_results.append(statistical_analysis([]))
 				continue
 
 			try:
@@ -112,7 +124,7 @@ def benchmark(languages, items, iterations=3, build_only=True):
 			except:
 				build_result = 1
 				print("   Compilation failed.")
-				language_results.append(float('nan'))
+				language_results.append(statistical_analysis([]))
 				continue
 
 			if build_only == False:
@@ -131,12 +143,7 @@ def benchmark(languages, items, iterations=3, build_only=True):
 						except:
 							print("   Running failed.")
 
-					if len(times) > 0:
-						average = sum(times) / len(times)
-					else:
-						average = float('nan')
-					language_results.append(average) # TODO also save min and max times
-					print("   Average time: " + str(round(average, 4)) + " s")
+					language_results.append(statistical_analysis(times))
 
 		results.append(language_results)
 
@@ -146,7 +153,10 @@ def benchmark(languages, items, iterations=3, build_only=True):
 # Print brief summary to console
 def print_to_console(languages, items, results):
 	languageMaxCharacter = len(max(languages, key = len))
-	formattedResults = list(results)
+	average_results = []
+	for lang in results:
+		average_results.append([x['average'] for x in lang])
+	formattedResults = list(average_results)
 	columnMaxes = [len(next) for next in items]
 	for idx, row in enumerate(formattedResults):
 		formattedResults[idx] = ["{:.3f}".format(col) + " s" for col in row]
@@ -174,11 +184,15 @@ def save_to_file(languages, items, results):
 
 # Generate a nice table output to file
 def save_to_html(languages, items, results):
+	average_results = []
+	for lang in results:
+		average_results.append([x['average'] for x in lang])
+	print(average_results)
 	html = '<html><body><table style="text-align:right">'
 	heading = "<th></th>" + "".join([ '<th style="font-style:bold;text-align:center;padding:5px 20px;">' + next + "</th>" for next in items])
 	html += "<tr>" + heading + "</tr>"
 	for i in range(len(languages)):
-		row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + "{:.3f}".format(next) + " s" + "</td>" for next in results[i]])
+		row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + "{:.3f}".format(next) + " s" + "</td>" for next in average_results[i]])
 		html += "<tr>" + row + "</tr>"
 	html += "</table></body></html>"
 	htmlFile = open("results.html", "w")
