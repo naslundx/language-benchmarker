@@ -7,12 +7,61 @@ import argparse
 import sys
 
 FNULL = open(os.devnull, 'w')
-languages = ["c", "cpp", "python2", "python3", "ooc", "rust", "go", "java", "erlang", "haskell", "js", "csharp", "lua", "ruby", "perl"] 
-items = ["helloworld", "primes", "densematrix", "binarytree"]  # TODO read from config file
+
+
+# Find all languages being used
+def get_languages(include_str="", exclude_str=""):
+	languages = []
+	possible_languages = [x[0] for x in os.walk(os.getcwd()) if not '.' in x[0] or '_' not in x[0]]
+
+	for dir in possible_languages:
+		files = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
+		if 'config.json' in files:
+			directory = os.path.split(dir)
+			languages.append(directory[1])
+
+	if include_str:
+		includes = include_str.split(',')
+		if set(languages) & set(includes):  # Only do this if at least one language is in the include string
+			result = [language for language in languages if language in includes]
+			languages = result
+
+	if exclude_str:
+		excludes = exclude_str.split(',')
+		result = [language for language in languages if language not in excludes]
+		languages = result
+
+	return languages
+
+
+# Find all implementations
+def get_items(languages, include_str="", exclude_str=""):
+	items = []
+	for language in languages:
+		config_data = open(language + '/config.json')
+		config = json.load(config_data)
+		config_data.close()
+
+		for item in config.keys():
+			if item not in items:
+				items.append(item)
+
+	if include_str:
+		includes = include_str.split(',')
+		if set(items) & set(includes):  # Only do this if at least one item is in the include string
+			result = [item for item in items if item in includes]
+			items = result
+
+	if exclude_str:
+		excludes = exclude_str.split(',')
+		result = [item for item in items if item not in excludes]
+		items = result
+
+	return items
 
 
 # Call clean on all items
-def cleanup():
+def cleanup(languages, items):
 	for language in languages:
 		config_data = open(language + '/config.json')
 		config = json.load(config_data)
@@ -30,7 +79,7 @@ def cleanup():
 
 
 # Run all items in all languages
-def benchmark(iterations=3, build_only=True):
+def benchmark(languages, items, iterations=3, build_only=True):
 	my_env = os.environ.copy()
 	my_env["GOPATH"] = os.getcwd()+'/go'
 
@@ -95,7 +144,7 @@ def benchmark(iterations=3, build_only=True):
 
 
 # Print brief summary to console
-def print_to_console(results):
+def print_to_console(languages, items, results):
 	languageMaxCharacter = len(max(languages, key = len))
 	formattedResults = list(results)
 	columnMaxes = [len(next) for next in items]
@@ -116,15 +165,15 @@ def print_to_console(results):
 
 
 # Generate a summary to a text file
-def save_to_file(results):
+def save_to_file(languages, items, results):
 	outPipe = sys.stdout
 	sys.stdout = open("results.txt", "w")
-	print_to_console(results)
+	print_to_console(languages, items, results)
 	sys.stdout = outPipe
 
 
 # Generate a nice table output to file
-def save_to_html(results):
+def save_to_html(languages, items, results):
 	html = '<html><body><table style="text-align:right">'
 	heading = "<th></th>" + "".join([ '<th style="font-style:bold;text-align:center;padding:5px 20px;">' + next + "</th>" for next in items])
 	html += "<tr>" + heading + "</tr>"
@@ -145,14 +194,16 @@ def main():
 	parser.add_argument("-c", "--clean", action="store_true", dest="clean", default=False, help="Only run cleanup.")
 	parser.add_argument("-b", "--build-only", action="store_true", dest="buildonly", default=False, help="Build, but do not run.")
 	parse_results = parser.parse_args()
+	languages = get_languages(parse_results.include, parse_results.exclude)
+	items = get_items(languages, parse_results.include, parse_results.exclude)
 
-	cleanup()
+	cleanup(languages, items)
 	if parse_results.clean == False or parse_results.buildonly == True:
-		results = benchmark(parse_results.iterations, parse_results.buildonly)
+		results = benchmark(languages, items, parse_results.iterations, parse_results.buildonly)
 		if parse_results.buildonly == False:
-			print_to_console(results)
-			save_to_file(results)
-			save_to_html(results)
+			print_to_console(languages, items, results)
+			save_to_file(languages, items, results)
+			save_to_html(languages, items, results)
 
 
 if __name__ == "__main__":
