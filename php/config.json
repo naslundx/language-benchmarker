@@ -1,0 +1,14 @@
+{
+  "helloworld":
+  {
+    "build": "",
+    "run": "php helloworld.php",
+    "clean": ""
+  },
+  "primes":
+  {
+    "build": "",
+    "run": "php primes.php",
+    "clean": ""
+  }
+}
