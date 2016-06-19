@@ -141,3 +141,11 @@ else
     perl -v | head -2 | tail -n1
 fi
 
+# php
+if ! check_exists "php"
+then
+    apt install php7.0-cli
+else
+    printf "\nAlready installed: php\n"
+    php -version | head -1
+fi
