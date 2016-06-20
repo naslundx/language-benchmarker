@@ -1,5 +1,4 @@
 import time
-import subprocess
 import json
 import subprocess
 import os
@@ -153,25 +152,27 @@ def benchmark(languages, items, iterations=3, build_only=True):
 # Print brief summary to console
 def print_to_console(languages, items, results):
 	languageMaxCharacter = len(max(languages, key = len))
-	average_results = []
-	for lang in results:
-		average_results.append([x['average'] for x in lang])
-	formattedResults = list(average_results)
-	columnMaxes = [len(next) for next in items]
-	for idx, row in enumerate(formattedResults):
-		formattedResults[idx] = ["{:.3f}".format(col) + " s" for col in row]
-		for jdx, (m, r) in enumerate(zip(columnMaxes, formattedResults[idx])):
-			if m < len(r):
-				columnMaxes[jdx] = len(r)
-	
-	columnGap = "    "
-	firstPart = "\n" + (languageMaxCharacter + 3) * " "
-	theRest = columnGap.join( ("{:^" + str(columnMaxes[colidx]) + "}").format(title) for colidx, title in enumerate(items) )
-	print(firstPart + theRest)
-	for idx, language in enumerate(languages):
-		firstPart = language.rjust(languageMaxCharacter) + " : " 
-		theRest = columnGap.join( ( "{:>" + str(columnMaxes[colidx]) + "}").format(res) for colidx, res in enumerate(formattedResults[idx]) )
+	for measure in sorted(results[0][0].keys()):
+		localResult = []
+		for lang in results:
+			localResult.append([x[measure] for x in lang])
+		formattedResults = list(localResult)
+		columnMaxes = [len(next) for next in items]
+		print("\n" + ("{:^" + str(sum(columnMaxes)) + "}").format(measure))
+		for idx, row in enumerate(formattedResults):
+			formattedResults[idx] = ["{:.3f}".format(col) + " s" for col in row]
+			for jdx, (m, r) in enumerate(zip(columnMaxes, formattedResults[idx])):
+				if m < len(r):
+					columnMaxes[jdx] = len(r)
+		
+		columnGap = "    "
+		firstPart = "\n" + (languageMaxCharacter + 3) * " "
+		theRest = columnGap.join( ("{:^" + str(columnMaxes[colidx]) + "}").format(title) for colidx, title in enumerate(items) )
 		print(firstPart + theRest)
+		for idx, language in enumerate(languages):
+			firstPart = language.rjust(languageMaxCharacter) + " : " 
+			theRest = columnGap.join( ( "{:>" + str(columnMaxes[colidx]) + "}").format(res) for colidx, res in enumerate(formattedResults[idx]) )
+			print(firstPart + theRest)
 
 
 # Generate a summary to a text file
@@ -184,17 +185,21 @@ def save_to_file(languages, items, results):
 
 # Generate a nice table output to file
 def save_to_html(languages, items, results):
-	average_results = []
-	for lang in results:
-		average_results.append([x['average'] for x in lang])
-	print(average_results)
-	html = '<html><body><table style="text-align:right">'
-	heading = "<th></th>" + "".join([ '<th style="font-style:bold;text-align:center;padding:5px 20px;">' + next + "</th>" for next in items])
-	html += "<tr>" + heading + "</tr>"
-	for i in range(len(languages)):
-		row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + "{:.3f}".format(next) + " s" + "</td>" for next in average_results[i]])
-		html += "<tr>" + row + "</tr>"
-	html += "</table></body></html>"
+	html = '<html><body>'
+	for measure in sorted(results[0][0].keys()):
+		table = '<div> <p style="text-align:center">' + measure + '</p>'
+		table += '<table style="text-align:right">'
+		localResult = []
+		for lang in results:
+			localResult.append([x[measure] for x in lang])
+		heading = "<th></th>" + "".join([ '<th style="font-style:bold;text-align:center;padding:5px 20px;">' + next + "</th>" for next in items])
+		table += "<tr>" + heading + "</tr>"
+		for i in range(len(languages)):
+			row = "<td>" + languages[i] +  "</td>" + "".join(['<td style="padding:5px 20px;">' + "{:.3f}".format(next) + " s" + "</td>" for next in localResult[i]])
+			table += "<tr>" + row + "</tr>"
+		table += "</table></div>" + "<br><br>"
+		html += table
+	html += "</body></html>"
 	htmlFile = open("results.html", "w")
 	htmlFile.write(html)
 	htmlFile.close()
