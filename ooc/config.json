@@ -16,5 +16,11 @@
     "build": "rock -q densematrix.ooc",
     "run": "./densematrix",
     "clean": "rock -x && rm densematrix"
+  },
+  "binarytree":
+  {
+    "build": "rock -q binarytree.ooc",
+    "run": "./binarytree",
+    "clean": "rock -x && rm binarytree"
   }
 }

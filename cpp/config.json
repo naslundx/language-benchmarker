@@ -10,5 +10,11 @@
     "build": "g++ primes.cpp -o primes -O3",
     "run": "./primes",
     "clean": "rm primes"
+  },
+  "binarytree":
+  {
+    "build": "g++ binarytree.cpp -o binarytree -O3 --std=c++11",
+    "run": "./binarytree",
+    "clean": "rm binarytree"
   }
 }
