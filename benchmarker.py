@@ -31,7 +31,7 @@ def get_languages(include_str="", exclude_str=""):
 		result = [language for language in languages if language not in excludes]
 		languages = result
 
-	return languages
+	return sorted(languages)
 
 
 # Find all implementations
@@ -57,7 +57,7 @@ def get_items(languages, include_str="", exclude_str=""):
 		result = [item for item in items if item not in excludes]
 		items = result
 
-	return items
+	return sorted(items)
 
 
 # Call clean on all items
