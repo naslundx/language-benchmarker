@@ -1,5 +1,6 @@
-local n = 10000
+local n = 100000 -- incorrect
 local primes = {2}
+
 for i = 3, n do
 	local isPrime = true
 	for j = 1, #primes do
@@ -12,7 +13,3 @@ for i = 3, n do
 		table.insert(primes, i)
 	end
 end
-
---for i=1,#primes do
---	print(primes[i])
---end

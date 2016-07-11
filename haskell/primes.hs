@@ -7,5 +7,4 @@ primesTo m = sieve [2..m]       {- (\\) is set-difference for unordered lists -}
 
 
 main = do
-    let a = primesTo 100000
-    putStrLn "hello"
+    let a = primesTo 1000000

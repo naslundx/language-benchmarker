@@ -10,6 +10,6 @@ for($i=3;$i<=$n;$i++)
         }
     }
     if($is_prime == 1) {
-	push @primes, $i;
+	    push @primes, $i;
     }
 }
