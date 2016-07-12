@@ -1,20 +1,20 @@
 {
   "helloworld":
   {
-    "build": "gcc helloworld.c -o helloworld -std=c11 -O3",
-    "run": "./helloworld",
-    "clean": "rm helloworld"
+    "build": ["mkdir -p bin", "gcc helloworld.c -o bin/helloworld -std=c11 -O3"],
+    "run": "./bin/helloworld",
+    "clean": "rm -rf bin"
   },
   "primes":
   {
-    "build": "gcc primes.c -o primes -std=c11 -O3",
-    "run": "./primes",
-    "clean": "rm primes"
+    "build": ["mkdir -p bin", "gcc primes.c -o bin/primes -std=c11 -O3"],
+    "run": "./bin/primes",
+    "clean": "rm -rf bin"
   },
   "binarytree":
   {
-    "build": "gcc binarytree.cpp -o binarytree -O3 -std=c11",
-    "run": "./binarytree",
-    "clean": "rm binarytree"
+    "build": ["mkdir -p bin", "gcc binarytree.c -o bin/binarytree -O3 -std=c11"],
+    "run": "./bin/binarytree",
+    "clean": "rm -rf bin"
   }
 }

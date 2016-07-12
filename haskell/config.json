@@ -1,14 +1,14 @@
 {
   "helloworld":
   {
-    "build": "ghc helloworld.hs -o helloworld",
-    "run": "./helloworld",
-    "clean": "rm helloworld; rm helloworld.hi; rm helloworld.o"
+    "build": ["ghc helloworld.hs -o helloworld", "mkdir -p bin", "mv helloworld bin/helloworld", "mv helloworld.hi bin/helloworld.hi", "mv helloworld.o bin/helloworld.o"],
+    "run": "./bin/helloworld",
+    "clean": "rm -rf bin"
   },
   "primes":
   {
-    "build": "ghc primes.hs -o primes",
-    "run": "./primes",
-    "clean": "rm primes; rm primes.hi; rm primes.o"
+    "build": ["ghc primes.hs -o primes", "mkdir -p bin", "mv primes bin/primes", "mv primes.hi bin/primes.hi", "mv primes.o bin/primes.o"],
+    "run": "./bin/primes",
+    "clean": "rm -rf bin"
   }
 }

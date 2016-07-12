@@ -60,6 +60,19 @@ def get_items(languages, include_str="", exclude_str=""):
 	return sorted(items)
 
 
+# Run a subprocess
+def execute(command, language, environment=None, printout=True):
+	if command == "":
+		return 0
+	if printout:
+		print("   > " + language + ": " + command)
+	if environment:
+		result = subprocess.call(command.split(' '), cwd=language+'/', env=environment, stdout=FNULL, stderr=FNULL)
+	else:
+		result = subprocess.call(command.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
+	return result
+
+
 # Call clean on all items
 def cleanup(languages, items):
 	for language in languages:
@@ -71,9 +84,11 @@ def cleanup(languages, items):
 			try:
 				item_data = config[item]
 				clean_cmd = item_data['clean']
-				if clean_cmd != "":
-					print("   > " + language + ": " + clean_cmd)
-					subprocess.call(clean_cmd.split(' '), cwd=language+'/', stdout=FNULL, stderr=FNULL)
+				if type(clean_cmd) is str:
+					execute(clean_cmd, language)
+				else:
+					for s in clean_cmd:
+						execute(s, language)
 			except:
 				None
 
@@ -115,11 +130,13 @@ def benchmark(languages, items, iterations=3, build_only=True):
 				continue
 
 			try:
-				print("   > "+build_cmd)
-				if build_cmd != "":
-					build_result = subprocess.call(build_cmd.split(' '), cwd=language+'/', env=my_env, stdout=FNULL, stderr=FNULL)
+				if type(build_cmd) is str:
+					build_result = execute(build_cmd, language, my_env)
 				else:
-					build_result = 0
+					for s in build_cmd:
+						build_result = execute(s, language, my_env)
+						if build_result != 0:
+							break
 			except:
 				build_result = 1
 				print("   Compilation failed.")
@@ -133,7 +150,7 @@ def benchmark(languages, items, iterations=3, build_only=True):
 					for it in range(0, iterations):
 						try:
 							start = time.time()
-							run_result = subprocess.call(run_cmd.split(' '), cwd=language+'/', env=my_env, stdout=FNULL, stderr=FNULL)
+							run_result = execute(run_cmd, language, my_env, printout=False)
 							end = time.time()
 							if run_result == 0:
 								times.append(end - start)

@@ -1,14 +1,14 @@
 {
   "helloworld":
   {
-    "build": "rustc helloworld.rs -o helloworld",
-    "run": "./helloworld",
-    "clean": "rm helloworld"
+    "build": ["mkdir -p bin", "rustc helloworld.rs -o bin/helloworld"],
+    "run": "./bin/helloworld",
+    "clean": "rm -rf bin"
   },
   "primes":
   {
-    "build": "rustc primes.rs -o primes",
-    "run": "./primes",
-    "clean": "rm primes"
+    "build": ["mkdir -p bin", "rustc primes.rs -o bin/primes"],
+    "run": "./bin/primes",
+    "clean": "rm -rf bin"
   }
 }
