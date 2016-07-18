@@ -54,6 +54,7 @@ venv/
 ENV/
 
 # binaries
+**/bin/
 **/*.o
 **/*.hi
 results.*

@@ -1,20 +1,20 @@
 {
   "helloworld":
   {
-    "build": "go build helloworld",
-    "run": "./helloworld",
-    "clean": "rm helloworld"
+    "build": ["go build helloworld", "mkdir -p bin", "mv helloworld bin/helloworld"],
+    "run": "./bin/helloworld",
+    "clean": "rm -rf bin"
   },
   "primes":
   {
-    "build": "go build primes",
-    "run": "./primes",
-    "clean": "rm primes"
+    "build": ["go build primes", "mkdir -p bin", "mv primes bin/primes"],
+    "run": "./bin/primes",
+    "clean": "rm -rf bin"
   },
   "binarytree":
   {
-    "build": "go build binarytree",
-    "run": "./binarytree",
-    "clean": "rm binarytree"
+    "build": ["go build binarytree", "mkdir -p bin", "mv binarytree bin/binarytree"],
+    "run": "./bin/binarytree",
+    "clean": "rm -rf bin"
   }
 }

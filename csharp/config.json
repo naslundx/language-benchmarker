@@ -1,14 +1,14 @@
 {
   "helloworld":
   {
-    "build": "mcs helloworld.cs",
-    "run": "mono helloworld.exe",
-    "clean": "rm helloworld.exe"
+    "build": ["mcs helloworld.cs", "mkdir -p bin", "mv helloworld.exe bin/helloworld.exe"],
+    "run": "mono bin/helloworld.exe",
+    "clean": "rm -rf bin"
   },
   "primes":
   {
-    "build": "mcs primes.cs",
-    "run": "mono primes.exe",
-    "clean": "rm primes.exe"
+    "build": ["mcs primes.cs", "mkdir -p bin", "mv primes.exe bin/primes.exe"],
+    "run": "mono bin/primes.exe",
+    "clean": "rm -rf bin"
   }
 }

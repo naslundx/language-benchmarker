@@ -3,12 +3,12 @@
   {
     "build": "javac helloworld.java",
     "run": "java helloworld",
-    "clean": "rm helloworld.class"
+    "clean": "rm -rf bin"
   },
   "primes":
   {
     "build": "javac primes.java",
     "run": "java primes",
-    "clean": "rm primes.class"
+    "clean": "rm -rf bin"
   }
 }

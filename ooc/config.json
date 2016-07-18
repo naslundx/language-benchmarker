@@ -1,26 +1,26 @@
 {
   "helloworld":
   {
-    "build": "rock -q helloworld.ooc",
-    "run": "./helloworld",
-    "clean": "rock -x && rm helloworld"
+    "build": ["mkdir -p bin", "rock -q helloworld.ooc -o bin/helloworld"],
+    "run": "./bin/helloworld",
+    "clean": ["rock -x", "rm -rf bin"]
   },
   "primes":
   {
-    "build": "rock -q primes.ooc",
-    "run": "./primes",
-    "clean": "rock -x && rm primes"
+    "build": ["mkdir -p bin", "rock -q primes.ooc -o bin/helloworld"],
+    "run": "./bin/primes",
+    "clean": ["rock -x", "rm -rf bin"]
   },
   "densematrix":
   {
-    "build": "rock -q densematrix.ooc",
-    "run": "./densematrix",
-    "clean": "rock -x && rm densematrix"
+    "build": ["mkdir -p bin", "rock -q densematrix.ooc -o bin/helloworld"],
+    "run": "./bin/densematrix",
+    "clean": ["rock -x", "rm -rf bin"]
   },
   "binarytree":
   {
-    "build": "rock -q binarytree.ooc",
-    "run": "./binarytree",
-    "clean": "rock -x && rm binarytree"
+    "build": ["mkdir -p bin", "rock -q binarytree.ooc -o bin/helloworld"],
+    "run": "./bin/binarytree",
+    "clean": ["rock -x", "rm -rf bin"]
   }
 }

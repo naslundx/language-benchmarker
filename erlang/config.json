@@ -3,6 +3,6 @@
   {
     "build": "erlc helloworld.erl",
     "run": "erl -noshell -s helloworld helloworld -s init stop",
-    "clean": "rm helloworld.beam"
+    "clean": ["rm helloworld.beam", "rm helloworld.dump"]
   }
 }
