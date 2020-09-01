@@ -4,25 +4,29 @@ class Primes
 {
 	static void Main(string[] args)
 	{
-		int n = 10000;
 		ArrayList primes = new ArrayList();
 		primes.Add(2);
-		for(int i = 3; i <= n; i++)
+		for(int i = 3; i < 1000000; ++i)
 		{
 			bool isPrime = true;
-			foreach(int divisor in primes)
+			for (int j = 0; j < primes.Count; ++j)
 			{
+				int divisor = (int)primes[j];
+				if (divisor * divisor > i)
+				{
+					break;
+				}
 				if (i % divisor == 0)
 				{
 					isPrime = false;
 					break;
 				}
 			}
-			if (isPrime)
-				primes.Add(i);
-		}
 
-		//foreach(int p in primes)
-		//	System.Console.WriteLine(p);
+			if (isPrime)
+			{
+				primes.Add(i);
+			}
+		}
 	}
 }

@@ -4,7 +4,8 @@ int main()
 {
     std::vector<int> primes;
     primes.push_back(2);
-    for(int i=3; i < 100000; i++)
+    
+    for(int i=3; i < 1000000; i++)
     {
         bool prime=true;
         for(int j=0;j<primes.size() && primes[j]*primes[j] <= i;j++)

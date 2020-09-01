@@ -1,6 +1,6 @@
-primes := VectorList<Int> new() . add(2)
+primes := VectorList<Int> new(79000) . add(2)
 
-for (i in 3 .. 100_000) {
+for (i in 3 .. 1_000_000) {
 	prime := true
 
 	for (j in 0 .. primes count) {
